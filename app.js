@@ -278,6 +278,7 @@ function buildKeyboard() {
     });
 
     button.addEventListener("pointerup", () => releaseMappedKey(item.key));
+    button.addEventListener("pointercancel", () => releaseMappedKey(item.key));
     button.addEventListener("pointerenter", () => {
       if (state.pointerKey) {
         playMappedKey(item.key);
@@ -293,6 +294,13 @@ function buildKeyboard() {
   });
 
   window.addEventListener("pointerup", () => {
+    if (state.pointerKey) {
+      releaseMappedKey(state.pointerKey);
+      state.pointerKey = null;
+    }
+  });
+
+  window.addEventListener("pointercancel", () => {
     if (state.pointerKey) {
       releaseMappedKey(state.pointerKey);
       state.pointerKey = null;
@@ -629,6 +637,13 @@ function initializeControls() {
   ].forEach(attachControl);
 
   controls.powerButton.addEventListener("click", startAudio);
+  controls.keyboard.addEventListener("touchend", () => {
+    if (state.pointerKey) {
+      releaseMappedKey(state.pointerKey);
+      state.pointerKey = null;
+    }
+  }, { passive: true });
+
   controls.octaveShift.addEventListener("input", () => {
     controls.octaveShiftValue.textContent = `${controls.octaveShift.value}`;
   });
