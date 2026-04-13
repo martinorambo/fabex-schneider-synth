@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabex Schneider Synth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Web Synthesizer</p>
+        <h1>Fabex Schneider Synth</h1>
+        <p class="lead">
+          Play lush pads, sharp leads, and deep basses in the browser with a high-quality
+          Web Audio engine, expressive controls, and live visual feedback.
+        </p>
+      </div>
+      <div class="hero-actions">
+        <button id="powerButton" class="power-button">Start Audio</button>
+        <p class="status-line">
+          Status:
+          <span id="statusText">Audio is sleeping until you click start.</span>
+        </p>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="panel feature-panel">
+        <div class="panel-heading">
+          <h2>Performance</h2>
+          <p>Play with your mouse or your keyboard. Try the middle row: A S D F G H J K.</p>
+        </div>
+
+        <div class="control-grid compact-grid">
+          <label class="control">
+            <span>Preset</span>
+            <select id="presetSelect"></select>
+          </label>
+
+          <label class="control">
+            <span>Waveform</span>
+            <select id="waveform">
+              <option value="sawtooth">Sawtooth</option>
+              <option value="square">Square</option>
+              <option value="triangle">Triangle</option>
+              <option value="sine">Sine</option>
+            </select>
+          </label>
+
+          <label class="control">
+            <span>Octave</span>
+            <input id="octaveShift" type="range" min="-2" max="2" step="1" value="0">
+            <strong id="octaveShiftValue">0</strong>
+          </label>
+
+          <label class="control">
+            <span>Unison Voices</span>
+            <input id="unisonVoices" type="range" min="1" max="4" step="1" value="2">
+            <strong id="unisonVoicesValue">2</strong>
+          </label>
+
+          <label class="control">
+            <span>Detune Spread</span>
+            <input id="detuneAmount" type="range" min="0" max="35" step="1" value="10">
+            <strong id="detuneAmountValue">10 cents</strong>
+          </label>
+
+          <label class="control">
+            <span>Glide</span>
+            <input id="glide" type="range" min="0" max="0.35" step="0.01" value="0.04">
+            <strong id="glideValue">0.04 s</strong>
+          </label>
+
+          <label class="control">
+            <span>Drive</span>
+            <input id="drive" type="range" min="0" max="3" step="0.01" value="1.2">
+            <strong id="driveValue">1.20</strong>
+          </label>
+
+          <label class="control">
+            <span>Master Volume</span>
+            <input id="masterGain" type="range" min="0" max="1" step="0.01" value="0.72">
+            <strong id="masterGainValue">72%</strong>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Envelope</h2>
+          <p>Shape how each note starts, fades, holds, and releases.</p>
+        </div>
+        <div class="control-grid">
+          <label class="control">
+            <span>Attack</span>
+            <input id="attack" type="range" min="0.001" max="2.5" step="0.001" value="0.02">
+            <strong id="attackValue">0.020 s</strong>
+          </label>
+          <label class="control">
+            <span>Decay</span>
+            <input id="decay" type="range" min="0.01" max="2.5" step="0.01" value="0.28">
+            <strong id="decayValue">0.28 s</strong>
+          </label>
+          <label class="control">
+            <span>Sustain</span>
+            <input id="sustain" type="range" min="0" max="1" step="0.01" value="0.65">
+            <strong id="sustainValue">65%</strong>
+          </label>
+          <label class="control">
+            <span>Release</span>
+            <input id="release" type="range" min="0.02" max="4" step="0.01" value="0.9">
+            <strong id="releaseValue">0.90 s</strong>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Filter</h2>
+          <p>Dial in brightness and resonance for a more analog-style tone.</p>
+        </div>
+        <div class="control-grid">
+          <label class="control">
+            <span>Cutoff</span>
+            <input id="filterCutoff" type="range" min="80" max="12000" step="1" value="5200">
+            <strong id="filterCutoffValue">5200 Hz</strong>
+          </label>
+          <label class="control">
+            <span>Resonance</span>
+            <input id="filterQ" type="range" min="0.1" max="18" step="0.1" value="3.2">
+            <strong id="filterQValue">3.2</strong>
+          </label>
+          <label class="control">
+            <span>Envelope Amount</span>
+            <input id="filterEnvelopeAmount" type="range" min="0" max="6000" step="10" value="1800">
+            <strong id="filterEnvelopeAmountValue">1800 Hz</strong>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>LFO Motion</h2>
+          <p>Add gentle vibrato or stronger pitch movement.</p>
+        </div>
+        <div class="control-grid">
+          <label class="control">
+            <span>LFO Rate</span>
+            <input id="lfoRate" type="range" min="0.1" max="12" step="0.1" value="4.2">
+            <strong id="lfoRateValue">4.2 Hz</strong>
+          </label>
+          <label class="control">
+            <span>LFO Depth</span>
+            <input id="lfoDepth" type="range" min="0" max="50" step="0.1" value="6">
+            <strong id="lfoDepthValue">6 cents</strong>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Space & FX</h2>
+          <p>Use delay and reverb for width, depth, and atmosphere.</p>
+        </div>
+        <div class="control-grid">
+          <label class="control">
+            <span>Delay Time</span>
+            <input id="delayTime" type="range" min="0.05" max="0.8" step="0.01" value="0.24">
+            <strong id="delayTimeValue">0.24 s</strong>
+          </label>
+          <label class="control">
+            <span>Delay Feedback</span>
+            <input id="delayFeedback" type="range" min="0" max="0.85" step="0.01" value="0.32">
+            <strong id="delayFeedbackValue">32%</strong>
+          </label>
+          <label class="control">
+            <span>Delay Mix</span>
+            <input id="delayMix" type="range" min="0" max="1" step="0.01" value="0.2">
+            <strong id="delayMixValue">20%</strong>
+          </label>
+          <label class="control">
+            <span>Reverb Mix</span>
+            <input id="reverbMix" type="range" min="0" max="1" step="0.01" value="0.26">
+            <strong id="reverbMixValue">26%</strong>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel keyboard-panel">
+        <div class="panel-heading">
+          <h2>Keyboard</h2>
+          <p>The highlighted key shows what you are playing. Mouse and touch work too.</p>
+        </div>
+        <div class="keyboard-shortcuts">
+          <span>A W S E D F T G Y H U J K</span>
+          <span>Mapped to one chromatic octave</span>
+        </div>
+        <div id="keyboard" class="keyboard" aria-label="Synth keyboard"></div>
+      </section>
+
+      <section class="panel visual-panel">
+        <div class="panel-heading">
+          <h2>Visualizer</h2>
+          <p>Live oscilloscope view of the synth output.</p>
+        </div>
+        <canvas id="visualizer" width="900" height="220"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
